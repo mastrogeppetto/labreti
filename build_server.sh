@@ -8,22 +8,25 @@
 fail() { echo -e "\n===\nErrore\n===\n"; exit 1; }
 
 # Configurazione automatica rete hostonly
-cat > /etc/network/interfaces.d/enp0s8 <<EOF
+cat > /etc/netplan/enp0s8.yaml <<EOF
 # The hostonly network interface
-auto enp0s8
-iface enp0s8 inet dhcp
+network:
+  version: 2
+  renderer: networkd
+  ethernets:
+    enp0s8:
+      dhcp4: true
 EOF
 
 # sudo senza password
-cat > /etc/sudoers.d/telematica <<EOF
-telematica ALL=(ALL:ALL) NOPASSWD:ALL
-EOF
-sudo chmod 0440 /etc/sudoers.d/telematica
+scp studente studente@192.168.5.2:/etc/sudoers.d/studente
 
-# login automatico sull tty1 NON FUNZIONA, cambiato il 16.04
-#tmp=$(tempfile)
-#sed "s%^exec .*%exec /bin/login -f telematica < /dev/tty1 > /dev/tty1 2>\&1%" /etc/init/tty1.conf > $tmp
-#mv $tmp /etc/init/tty1.conf
+# autologin su tty01
+scp autologin@.service studente@192.168.5.2:/etc/systemd/system/autologin@.service
+systemctl daemon-reload
+systemctl disable getty@tty1
+systemctl enable autologin@tty1
+systemctl start autologin@tty1
 
 # motd con indirizzo IP e MAC
 cat > /etc/update-motd.d/92-vminfo <<"EOF"
@@ -34,6 +37,9 @@ echo " * IP address: $IPaddr"
 echo " * MAC address: $MACaddr"
 EOF
 sudo chmod a+x /etc/update-motd.d/92-vminfo
+
+exit 0
+
 
 if ! apt-get -y update; then fail; fi
 if ! apt-get -y upgrade; then fail; fi

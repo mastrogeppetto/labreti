@@ -1,0 +1,75 @@
+conky.config = {
+
+-- Create own window instead of using desktop (required in nautilus)
+	own_window = true,
+	own_window_hints = 'undecorated,below,skip_taskbar',
+	background = false,
+  	own_window_transparent = true, 
+	own_window_type = desktop,
+	default_color = ff8000,
+--  	own_window_argb_visual = true, 
+--	own_window_class = override,
+
+-- Use double buffering (reduces flicker, may not work for everyone)
+	double_buffer = false,
+
+-- fiddle with window
+	use_spacer = 'right',
+	use_xft = true,
+
+-- Update interval in seconds
+	update_interval = 3.0,
+
+-- Minimum size of text area
+	minimum_width = 100, minimum_height = 5,
+
+-- Draw shades?
+	draw_shades = false,
+
+-- Text stuff
+	draw_outline = false,-- amplifies text if yes
+	draw_borders = false,
+
+	uppercase = false,-- set to yes if you want all text to be in uppercase
+
+-- Stippled borders?
+	stippled_borders = 8,
+
+-- border margins
+--	border_margin = '4',
+
+-- border width
+	border_width = 1,
+
+-- Default colors and also border colors, grey90 == #e5e5e5
+	default_color = 'white',
+	default_shade_color = 'black',
+	default_outline_color = 'white',
+
+	own_window_colour = 'brown',
+	own_window_transparent = true,
+
+-- Text alignment, other possible values are commented
+--alignment top_left
+	alignment = 'top_right',
+--alignment bottom_left
+--alignment bottom_right
+
+-- Gap between borders of screen and text
+	gap_x = 10,
+	gap_y = 10,
+
+-- stuff after 'TEXT' will be formatted on screen
+
+	override_utf8_locale = false,
+	font = 'Terminus:size=8',
+	xftalpha = 0.8,
+
+};
+
+conky.text = [[
+
+${offset 240}${color slate grey}${color }${time %e %B %G}
+${offset 240}${color slate grey}IP address: ${color }${addr enp0s8}
+${offset 240}${color slate grey}MAC address: ${color }${execi 99999 cat /sys/class/net/enp0s8/address}
+]];
